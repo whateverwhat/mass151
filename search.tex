@@ -1,0 +1,81 @@
+This section describes the reference point search scheme, which matches query feature points to reference points for the purpose of acquiring the nearest neighbors. We transform the matching problem to the well-known Nearest Neighbor (NN) search problem.
+%The best candidate match for each feature point is found by identifying its NN in the database of reference points.
+The distance between two feature points equals the Euclidean distance of their descriptors.
+We also use this distance to measure the similarity of a match between query point and reference point and that a match has short distance means a good match with high similarity, and vice versa.
+% We will eliminate the matches with low similarity by comparing the distance between query point and its closest neighbor to the distance between query point and its second-closest neighbor. The insights under the scheme lies in that correct matches should have the closest neighbor significantly closer than the closest incorrect match to achieve good matching. In the work of Lowe \cite{lowe2004distinctive}, by removing matches where the distance ratio between the closet and second-closet neighbors is greater than 0.8, it eliminates 90$\%$ of the false matches while discarding less than 5$\%$ of the correct matches.
+
+In fact, exhaustive search for the NN in a large database is costly for both space and time. Many data organization and search schemes has been proposed to speed up the process, we propose a fast two-stage search scheme based on cluster \cite{gudmundsson2010large}. Both the visible orientation and feature descriptor of the point are considered in our method. Our two-stage search scheme includes preprocessing stage and search stage.
+%The viewing angle of user's smart phone need to lie in the range of visible orientation of the found reference points. Meanwhile, the distance between feature descriptors of input feature points and reference points in database should be minimized.
+\subsection{Preprocessing Stage}
+In the preprocessing stage, we firstly partition all reference points into $b$ bins according to their visible orientation. Though reference point may be replicated in bins that overlap with its visible orientation, we just search the NN of the query feature point in only one bin according to its shooting angle.
+\begin{algorithm}[!ht]
+\caption{Clustering Descriptors}\label{clustering}
+\begin{algorithmic}[1]
+\Require reference point set $S$,set size $N$
+\Ensure representative set $R$, cluster hash map $C\langle Representative,Cluster\rangle$
+%\Function {Clustering}{$S,N$}
+    \State $R \gets null$, $C \gets null$
+    \While{$ |R| < \sqrt{N}$}
+        \State Randomly choose a reference point $d$ from $S$
+        \If {$d \notin R$}
+            \State $R \gets R \cup d$
+        \Else
+            \State continue
+        \EndIf
+    \EndWhile
+    \ForAll {$r \in R$}
+        \State $w \gets \phi$
+        \State $C.put(r,w)$
+    \EndFor
+    \ForAll {$d \in S$}
+        \State $f \gets $ the cluster whose representative is closest to $d$
+        \State $f.add(d)$
+    \EndFor
+    \State \Return $C, R$
+%\EndFunction
+%\Function {FindClosestCluster}{$d, R, C$}
+%    \State $minDis \gets MAXDISTANCE$
+%    \State $f \gets null$
+%    \ForAll {$r \in R$}
+%        \State $dist \gets distance(d,r)$
+%        \If {$dist < minDis$}
+%            \State $minDis \gets dist$
+%            \State $f \gets C.get(r)$
+%        \EndIf
+%    \EndFor
+%    \State \Return $f$
+%\EndFunction
+\end{algorithmic}
+\end{algorithm}
+In each bin, we randomly choose $\sqrt{N}$ reference points as the representatives of clusters. Then we put every reference point into the cluster whose representative is the closest to it. At last, we acquire $\sqrt{N}$ clusters, each of which has a unique representative. The cluster algorithm is described in Algorithm~\ref{clustering}.
+
+For parameter $b$ we make a tradeoff between the space and the search time.
+%The bins act as filters that prune significant portion of unmatched reference points according to their visible orientation at the cost of replications.
+As $b$ increases, more bins are introduced and the angle range of each bin decreases. Thus the visible orientation of each reference point will span more bins and have more replications. Since the angle range of each bin gets wider, the number of reference points in each bin decreases, the search time decreases as well. Without loss of generality, we set $b$ equal to 30 degree.
+
+\subsection{Search Stage}
+In the search stage, in order to find descriptor $Q$'s nearest neighbors in its visible orientation bin, we propose a 2-round search algorithm. In the first round, we calculate the distance between $Q$ and each representative. We denote the closest representative as $T$.
+%\begin{algorithm}[!ht]
+%\caption{K Nearest Neighbor Searching }\label{searching}
+%\begin{algorithmic}[1]
+%\Require feature descriptor $Q$, representative set $R$, cluster hash map $C\langle Representative,Cluster\rangle$
+%\Ensure K nearest neighbor feature descriptor set T
+%%\Function{Searching}{$Q, C, R$}
+%    \State $f \gets  $the cluster whose representative is closest to $Q$
+%    \State $T \gets \phi$
+%    \ForAll {$d \in f$}
+%        \State $t \gets $the point in $T$ with maximum distance to $Q$
+%        \If {$distance(Q,d) < distance(Q, t)$}
+%            \State $T \gets T - t$
+%            \State $T \gets T \cup d$
+%        \EndIf
+%    \EndFor
+%   \State \Return $T$
+%%\EndFunction
+%\end{algorithmic}
+%\end{algorithm}
+It is supposed $Q$'s NN belongs to $T$'s cluster. Therefore, we look for $Q$'s NN in $T$'s cluster in the second round. We compute the distances between $Q$ and each feature point in $T$'s cluster. Finally, we obtain $K$ closest feature points as $Q$'s top-K NN.
+%The search algorithm is described in Algorithm~\ref{searching}.
+\subsection{Complexity Analysis}
+\label{complexity}
+In the preprocessing stage, assume there are $b$ bins and each bin has $N$ reference points averagely. With respect to one bin, we will compare $N$ reference points to $\sqrt{N}$ representatives, \ie we will do $b\times N\times \sqrt{N}$ comparisons in all. At query time, we compare the query feature descriptor $Q$ to representatives in the specific bin determined by the orientation of user's camera. $Q$ is firstly compared to $\sqrt{N}$ representatives to find the nearest cluster $f$. Then $Q$ is compared to each reference point in $f$. On average, each cluster contains $\sqrt{N}$ reference points. Thus, for one query feature point $Q$, we need to do a total of $2\sqrt{N}$ comparisons.

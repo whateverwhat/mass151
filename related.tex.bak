@@ -1,0 +1,90 @@
+%\textbf{Indoor Localization}
+There are many dedicated indoor localization systems with specialized hardware, \eg sensors and RFID,
+ which can achieve high accuracy, but are not scalable.
+Many application scenarios of mobile social networks are indoor.
+One popular line of mobile handset indoor localization is fingerprinting.
+These approaches collect fingerprints with known locations
+ and compare the observed measurement at unknown locations with
+ all known fingerprints to find the best match.
+Some systems depend on fingerprints of wireless signals to achieve room-level user localization.
+RADAR \cite{bahl2000radar} proposes a radio-frequency (RF) based system
+ for locating and tracking users inside buildings.
+Horus \cite{youssef2008horus} designs a WLAN location determination system
+ which achieves meter-level localization.
+\cite{varshavsky2007gsm} presents a GSM indoor
+localization system that achieves median accuracy of 4 m.
+Some recent systems have incorporated surveying by users.
+OIL \cite{park2010growing} uses Voronoi regions for conveying uncertainty and reasoning about gaps in coverage, and a clustering method for identifying potentially erroneous user data to facilitate rapid coverage while maintaining positioning accuracy.
+EZ \cite{chintalapudi2010indoor} exploits the RSSI of indoor APs to estimate the user's location with no pre-deployment effort and yield a median localization error of 2m and 7m.
+
+%There are other types of fingerprints used to achieve room-level localization.
+%For example, SurroundSense \cite{azizyan2009surroundsense} proposes
+% a system for logical localization (like Starbucks, McDonalds)
+% using optical, acoustic, and motion attributes sensed by
+% the phone as a logical location fingerprint.
+%\cite{matic2010tuning} uses FM radio signal as the fingerprint,
+%Batphone \cite{tarzia2011indoor} uses a ambient sound fingerprint
+% called the Acoustic Backgroun Spectrum (ABS),
+% \cite{chung2011indoor} uses Geo-magnetism as fingerprint,
+% \cite{jin2010indoor} uses CIR(channel impulse response) as fingerprint.
+
+%Some work localize by estimating distances to anchor nodes
+% based on RSSI, time-of-arrival (TOA), time-difference-of-arrival (TDOA) and angle-of-arrival AoA.
+%BeepBeep \cite{peng2007beepbeep} proposes ETOA which enable a centimeter accuracy acoustic-based
+% ranging method between a pair of mobile handsets.
+%ETOA avoids many sources of inaccuracy found in other typical time-of-arrival
+%schemes, such as clock synchronization, non-real-time handling,
+%software delays, etc.
+
+\cite{qiu2011feasibility} presents a solution for achieving high speed 3D continuous
+localization for a pair of phones using two microphones with one
+speaker on a phone. This approach uses acoustic cues based on time-of-arrival and
+power level with assistance of accelerometers and digital compasses.
+\cite{liu2012push} obtains acoustic ranging estimates
+among peer phones and maps phones' locations jointly against
+ WiFi signature map subject to ranging constraints
+ to reduce the significant errors of WiFi-based method.
+Virtual Compass \cite{banerjee2010virtual} designs a
+ peer-based relative positioning system on commodity mobile handhelds
+ to determine proximity.
+It uses multiple radios to detect nearby
+ mobile devices and places them in a two-dimensional plane.
+It uses adaptive scanning and out-of-band coordination to explore trade-offs between
+energy consumption and the latency in detecting movement.
+
+%\cite{pierre2001deriving} extracts the edges and color features and encodes them as fingerprint sequence.
+% then makes use of a sequence matching algorithm to find the best match between the query image and the pre-built panoramic view database of the scene to determines the location where the query image was taken.
+% The system needs a exhausted site survey to pre-build a panoramic view database which makes use of specific devices.
+%Mobile phone,sensor hints: accelerometer, compass, gyro, camera, microphone noisy, logical localization,body blocking effect.
+%feature: power:RSSI:wifi, time:TDoA:uwb, angle:AoA:mimo
+%mobile phone,sensor hints: accelerometer, compass, gyro, camera, microphone
+%noisy, logical localization
+%RSSI:path loss ,shadow, multipath
+%RSSI dynamic, rssi changes during a short period
+%body blocking effect
+%\textbf{User Pattern Preconization}
+%\textbf{Neighbor Discovering}
+%Centralized: Provides applications with absolute locations.
+%Indoor localization is difficult.
+%It is slow and difficult to manage across applications.
+%Mobile to mobile: QualComm AllJoyn, Nokia Sensor, Nintendo StreetPass, Sony Vita, Wi-Fi Direct
+%Local, reduced latency, up-to-date, user-controlled.
+%It enables applications to focus on proximity instead of absolute location.
+%challenge:encounters are unplanned and changing, constant scanning is energy consuming.
+%Efficient duty cycling requires global synchronization which is difficult.
+%(Small delay required)
+%
+%\textbf{Classification based Localization}
+%\cite{iwan2000appear} recognizes mobile robot's topological position by voting from the color bands combined to classify the input images. The system classifies the input images in real-time based on nearest-neighbor learning, image histogram matching and a simple voting scheme.
+%\cite{kosecka2003qual} presents a qualitative localization scheme. The system firstly infers a topological model of an environment from images or video streams, then classifies the image according to gradient orientation histograms of image's edge map. At last, the system determines the location taking advantage of Learning Vector Quantization(LVQ) which obtained by selecting the representative feature vectors best covering the class.
+
+%\textbf{3D model based Localization}
+%Construction: expensive; Matching: expensive; Storage: large data size.
+%Existing work: pinhole model based ranging.
+Structure from Motion(SfM) reconstruction approaches enables the creation of large scale 3D models of urban scenes\cite{torsten2011fast}, which can be used in image-based localization through computing 2D-to-3D correspondences.
+To improve the performance of 2D-to-3D matching methods, \cite{torsten2011fast} derives a visual vocabulary quantization based matching framework and a prioritized correspondence search.
+\cite{jason2013image} presents a pipeline system to perform image-based localization of mobile devices.
+A 3D geo-referenced image database is generated by making use of a specific human operated backpack.
+It matches SIFT feature extracted from query images against the 3D point cloud, combining user's cell phone sensor information like pitch and roll, to recover the user's pose.
+
+Some vison-based localization works\cite{kosecka2003qualitative}\cite{kosecka2003qualitative}\cite{ulrich2000appearance}compares a test image against a database of pre-captured benchmark images, finds the "closest" match and uses its location. \cite{tian2014towards} combines photos and gyroscope on smartphone to localize users by measuring users' relative positions to physical objects. \cite{manweiler2012satellites} allows users to locate remote objects by a few photos from different known locations.

@@ -1,0 +1,173 @@
+%\documentclass{sig-alternate-10pt}
+
+\documentclass[10pt, conference, letterpaper]{IEEEtran}
+
+
+%\usepackage{txfonts}
+\usepackage{amsmath}
+%\usepackage{mathbold}
+\usepackage{cases}
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+
+\usepackage{cite}
+\usepackage{times}
+\usepackage{graphicx}
+\usepackage{graphics}
+\usepackage{subfigure}
+\usepackage{epsfig}
+\usepackage{latexsym}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{paralist}
+\usepackage{xspace}
+\usepackage{mathrsfs}
+\usepackage{amssymb}
+\usepackage{slashbox}
+%\usepackage{setspace}
+\usepackage{color}
+%\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+ %\usepackage{algorithmicx}
+ %\usepackage{algpseudocode}
+\usepackage{algorithm} %ctan.org\pkg\algorithms
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{amsmath}
+\usepackage{url,epsfig,array}
+\usepackage{setspace}
+%\usepackage{fontspec}
+
+\renewcommand{\ttdefault}{cmtt}
+
+%\usepackage{listings}
+
+%\lstset{language=C++}
+%\lstset{breaklines}
+%\lstset{extendedchars=false}
+
+
+\allowdisplaybreaks %%% this make pages look tight.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def\ie{\textit{i.e.}\xspace}
+\def\etal{\textit{et al.}\xspace}
+\def\etc{\textit{etc.}\xspace}
+\def\whp{\textit{w.h.p.}\xspace}
+\def\eg{\textit{e.g.}\xspace}
+\def\iid{\textit{i.i.d.}\xspace}
+\def\st{\xspace\textbf{s.t.}\xspace}
+
+\def\accl{\textbf{a}}
+\def\oursystem{\xspace{PerLoc}\xspace}
+\newcommand{\CUTXY}[1]{{}}
+
+\newcommand{\mynote}[1]{{$\langle${\textbf{\textcolor{blue}{#1}}}$\rangle$}}
+\newcommand{\linote}[1]{{$\langle${\textbf{\textcolor{red}{#1}}}$\rangle$}}
+
+\newcommand{\weight}[2]{{\omega(#1,#2)}}
+\newcommand{\length}[1] {{\Vert #1 \Vert}}
+\newcommand{\prob}[1]{{\textbf{Pr}\left(#1\right)}}
+\newcommand{\link}{{\textbf {L}}}
+
+\renewcommand{\paragraph}[1]{\smallskip \noindent {\textbf{#1}}}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+\newtheorem{theorem}{Theorem}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{proposition}[theorem]{Proposition}
+% defines environments: theorem, lemma, proposition, corollary
+
+
+
+% the proof environment
+%\newenvironment{proof}[1][Proof]{\begin{trivlist}
+%\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+
+
+\begin{document}
+\title{PerLoc: Enabling Infrastructure-Free Indoor Localization with Perspective Projection }
+%\author{IEEE Infocom 2015. Paper ID}
+
+
+%\author{Puchun Feng,Lan Zhang, Kebin Liu, Yunhao Liu}
+\author{\IEEEauthorblockN{Puchun Feng, Lan Zhang, Kebin Liu, Yunhao Liu }
+\IEEEauthorblockA{School of Software and TNLIST, Tsinghua University \\
+Email: fengpc12@mails.tsinghua.edu.cn, \{zhanglan, kebin, yunhao\}@greenorbs.com}
+}
+%\thanks{This work is supported by .}\\
+%       \affaddr{Tsinghua University, Beijing, China}\\
+%       \email{zhanglang03@gmail.com}}
+%\thanks{This research was partly funded by the National 863 Plan (Projects Numbers: 2009AA04Z153), P. R. China, and The State Key Development Program for Basic Research of China (Grant No.  2010CB328000).}
+
+
+\maketitle
+
+
+\begin{abstract}
+With the rapid development of mobile applications, there is an urgent need for highly efficient indoor localization service.
+Dedicated systems achieve good accuracy at the cost of deploying special hardware. Fingerprint-based methods avoid maintaining the expensive infrastructure but suffer from intensive labor for site-survey and poor robustness.
+In this paper, we present \oursystem, an infrastructure-free localization system which leverages rich vision features in indoor environment with high efficiency and accuracy. \oursystem makes use of binocular ranging technique to calculate the depth of a feature point and then figures out its geographical coordinates to build up reference point database, for which we design a filtering scheme to keep the database efficient in storage and search delay. During the localization stage, users simply take a photo of surroundings and feature points are extracted automatically as input for search scheme. Then a fast two-stage search scheme is proposed to find the nearest neighbors of query feature points in reference point database. Based on the perspective projection model, we inversely calculate users' geographical location in realtime.
+We implement the proposed localization system on commercial smartphones as well as laptops and conduct extensive experiments. \oursystem achieves $1.76m$ of average error in office environment, and $2.2m$ of average error in shopping mall.
+
+
+\end{abstract}
+
+\section{Introduction}
+\label{sec:introduction}
+\input{intro.tex}
+
+\section{System Overview}
+\label{sec:over}
+\input{system_overview.tex}
+
+\section{Site Survey Approach}
+\label{sec:site}
+\input{site.tex}
+
+\section{Search Scheme}
+\label{sec:search}
+\input{search.tex}
+
+\section{Inverse Localization}
+\label{sec:inverse}
+\input{inverse.tex}
+
+%\section{Trace Optimization}
+%\label{sec:trace}
+%\input{trace.tex}
+
+\section{Implementation and Evaluation}
+\label{sec:eva}
+\input{eva.tex}
+
+\section{Related work}
+\label{sec:review}
+\input{related}
+
+\section{Acknowledgements}
+\label{sec:ack}
+\input{ack}
+
+\section{Conclusion}
+\label{sec:conclusion}
+\input{conclusion.tex}
+
+%\fontsize{21pt}{\baselineskip}\selectfont
+%\begin{spacing}{0.85}
+% references section
+{\small
+\bibliographystyle{IEEEtran}
+\bibliography{sigproc}
+}
+%\end{spacing}
+
+
+
+
+
+\end{document}

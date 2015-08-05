@@ -1,0 +1,573 @@
+There are mainly two way to collect the features of people:
+ (1) indirect features from the visual sensors (like cameras) based on graph analysis and
+ (2) direct features from the user input and device information (like location, motion pattern detected by sensors).
+
+\subsection{Indirect Features from Visual Sensors}
+In this subsection, we present our techniques
+ which extract users' indirect features from
+ photos and videos captured by the camera
+ of the smart phone in a social scenario.
+
+We use \emph{visible profile} to indicate
+ a set of appearance features of a person,
+ including his/her face, cloth, height, gender, etc.
+In real social activities, people recognize friends mainly by their appearances.
+Visible profile is an important type of feature
+ to distinguish people, which is usually ignored in the existing mobile social networking systems.
+In this work,
+ SocialLens processes the images from the photos and videos captured by users' camera,
+ and analyze them to acquire the visible profile of people in the image.
+With visible profile recognition,
+ SocialLens helps users to identify the unfamiliar people in their views.
+
+Prior to extracting the visible profile of people,
+ we need detect human in a image first.
+\subsubsection{Human Detection}
+\emph{Human detection} have been proven to be very difficult
+ due to the wide variability in appearance
+ caused by clothing, postures, motion, articulation, illumination and other unexpected factors.
+In this work we implement then following three human detection technologies
+ and integrate them for a more robust detection result
+ to cope with the variability.
+
+\paragraph{Face detection:}
+Human face detection is usually carried out with a cascade classifier,
+ which includes two major stages: training and detection.
+In this work, we implement a rapid face detection using boosted cascade classifiers \cite{Paul2001Rapid}
+ with trained LBP (Local Binary Patterns) \cite{Shengcai2007Learning} features,
+ because both training and detection with LBP features
+ are several times faster than with Haar features used in \cite{Paul2001Rapid}.
+First, we trained a cascade classifier with LBP features with 20 stages
+ using $3000$ positive samples and 1500 negative samples of human face.
+%positive examples are images of human face that are scaled to the same size (24x24);
+%negative examples are arbitrary images of the same size.
+The training stage only need to be executed once while the developing phase of SocialLens .
+Then the trained classifier of human face can be used
+ as a resource file of SocialLens and applied across the captured image
+ as a search window to search for human faces at different scales.
+
+
+\paragraph{Whole Body Detection:}
+Usually there are some people who are not facing the camera.
+In this case, we need to detect the whole body of people.
+SocialLens implements a pedestrian detection.
+ based on Dalal's object detector \cite{dalal2005histograms} using Histogram-of-Oriented-Gradients (HOG) features,
+ which is proved to be powerful for detection objects with well-defined silhouettes, like people.
+We learn the HOG features of the silhouette of people from 2400 positive samples and 1200 negative samples
+ and apply a grid of HOG to compute over blocks of a image to classify people using a linear Support Vector Machine (SVM).
+
+%There are two situations:  full-length shot(standing or squatting) or burst shot(whose feet are covered by other people of objects).
+
+\paragraph{Upper Body Detection:}
+Even with a body detection, we can not detect all people in a image,
+ because there is still a case that some people are captured by a waist shot,
+ \eg. whose feet are covered by other people of objects.
+In this case, a useful way is to detect the upper body of people, \ie head and shoulder.
+The technique is similar as that used to detect the whole body,
+ except that the HOG features is learnt from a thousand images of people's upper body.
+
+\begin{figure}[t!]
+\centering
+\includegraphics[width=0.6\linewidth]{vector.eps}
+\caption{The learnt human features.}\label{fig_vector}
+\end{figure}
+
+
+It is not practical to simply execute the three techniques one by one,
+ because the Dalal's object detector is very time-consuming,
+ which can only process $320 \times 240$ images at $1$ FPS.
+To make the human detection efficient in a mobile phone with high resolution camera
+ and limited computation resources, SocialLens integrates the three techniques in the following way
+ to realize robust and efficient human detection.
+
+[TODO:Add some data here.]
+
+
+
+After detecting people in a image,
+ we can extract their visible profile from their regions of the image.
+\subsubsection{Visible Profile}
+The following characteristics are detected by SocialLens
+ and can be used as parts of visible profile.
+
+\paragraph{Facial Profile:}
+By detecting the faces in the captured image,
+ we get the facial image of each face, which can be used for further face matching.
+
+\paragraph{Gender Profile:}
+We learn the discriminative features of male face and female face.
+Given a facial image, we can estimate the person's gender using the class-specific features.
+
+\paragraph{Size Profile:}
+By face detection, we can get people's eye distance in the image.
+And the whole body detection provides us people's height in the image.
+
+\paragraph{Color Profile}
+With the whole body detection results,
+ the color histograms of people are calculated,
+ which mainly depends on the color of cloth.
+
+
+
+
+\subsubsection{Location}
+After detecting people, SocialLens also localizes people in the images.
+Two types of vision-based localization are implemented by SocialLens for diverse mobile devices:
+ the monocular-vision localization and binocular-vision localization.
+
+\begin{figure}[t!]
+\centering
+\includegraphics[width=0.9\linewidth]{position.eps}
+\caption{Relative depth decision by elevation using the face detection, upbody detection and whole body detection results. In the cases with check marks, the relative depth is definite; in cases with question marks, the relative depth is uncertain. }\label{fig_position}
+\end{figure}
+
+\begin{figure}[t!]
+\centering
+\includegraphics[width=0.9\linewidth]{pinhole.eps}
+\caption{Pinhole geometric model of monocular camera.}\label{fig_pinhole}
+\end{figure}
+
+
+\paragraph{Monocular vision based localization}
+So far, many smart phones has one camera lens and the photos are in 2D format.
+Many exiting work, \eg \cite{Anat08,Adelson92},
+ estimate the position(depth or distance) of people by analyzing the 2D image.
+Most of them requires special camera, \eg professional-quality camera,
+ plenoptic camera or camera with coded aperture.
+Others requires the measured object to be far away from the camera, \eg a building.
+SocialLens uses the low-quality perspective camera of the commercial mobile device
+ to estimate the depth of the people in a image.
+
+The first monocular cue of depth is \emph{elevation}.
+Basically，in a image people who are closer to the upper horizon are farther away,
+  and people who are closer to the lower horizon are closer to the camera.
+SocialLens decides the relative depth of people by elevation using the face detection, upbody detection and whole body detection results.
+Figure~\ref{fig_position} shows the possible position situations.
+In the cases with check marks, the relative depth can be decided,
+ but in cases with question marks, the relative depth is uncertain,
+ \eg, a person closer but much higher than another farther person.
+
+So we need the relative depth of people in the uncertain cases,
+ as well as more accurate ranging result.
+SocialLens uses the geometric model of classical pinhole camera, as shown in Figure  ~\ref{fig_pinhole},
+  which is the model for most camera systems.
+Let $p$ be the \emph{pixel pitch} between adjacent pixels on the image sensor of camera.
+Then we have $p=\frac{sensor height (mm)}{image height(pixel)}$, which is a intrinsic parameters of a camera.For example, on the image sensor of EVO 3D, $P=1.75 \mu m$.
+The focus length $f$ is also a intrinsic parameter, which is the distance from the ''pinhole''
+ to the image sensor .
+Let $h$ denote the real size of an object outside of the camera,
+ and $a$ is its apparent size in the image in pixels.
+$r$ is the range or distance from the object to the camera.
+Then these variables follow the relationship:
+\begin{equation}
+\frac{a\cdot p}{f}=\frac{h}{r}.
+\end{equation}
+Using this model, if some absolute size of people is known,
+ an absolute distance can be calculated.
+Based on our detection method, the absolute size of people could be eye distance,
+ shoulder width and height.
+If two object are known to be the similar size but their absolute size is unknown (\eg. the eye distance), relative size in the vision can provide information about the relative depth of the two objects.
+This pinhole model based method can provide sub-meter level accurate,
+ when people are within 10 meters range of the camera.
+The inaccuracy are mainly caused by the distortion of lens
+ and the deviation of the human feature detection.
+
+
+Motion also provide cues for depth, \eg the motion parallax \cite{Ferris95}(when the observer moves, nearby things pass quickly, while far off objects appear stationary).
+If information about the direction and velocity of movement is known,
+ motion parallax can provide absolute depth information.
+The motion status is acquired from the sensors of the observer's phone.
+By tracking the people, we can update the ranging of them.
+
+
+
+
+
+
+%Of these various cues, only the depth from motion provide absolute distance information.
+%All other cues are relative (i.e., they can only be used to tell which objects are closer relative to others). Stereopsis is merely relative because a greater %or lesser disparity for nearby objects could either mean that those objects differ more or less substantially in relative depth or that the foveated object is %nearer or further away (the further away a scene is, the smaller is the retinal disparity indicating the same depth difference).
+
+\begin{figure}[t!]
+\centering
+\includegraphics[width=0.95\linewidth]{twoview.eps}
+\caption{Model of two aligned cameras capturing rectified images for depth estimation.}\label{fig_twoview}
+\end{figure}
+
+\paragraph{Binocular vision based localization}
+Recently more commercial smart phones support 3D views,
+ like HTC Evo 3D and LG Optimus 3D.
+A stereo camera with two aligned lenses simulates human binocular vision
+ and gives the ability to capture 3D images for making stereoviews and range imaging.
+The binocular vision based localization
+ requires input from two lenses to estimate ranging of objects.
+The most important binocular cue is stereopsis or retinal (binocular) disparity.
+It yields depth from binocular vision through exploitation of parallax.
+By using two images(left and right) of the same scene obtained from slightly different angles,
+ SocialLens triangulates the distance to an people with a high degree of accuracy.
+Intuitively, if an object is far away, the disparity of that image falling on both retinas will be small; if the object is close or near, the disparity will be large.
+SocialLens uses the following steps to estimate a person's distance to the camera:
+    \begin{enumerate}[1)]
+    \item Calibration: calibrate a camera with the given chessboard image.
+    Because there may be a significant distortion.
+    Luckily, these are constants and with a calibration and some remapping we can correct this. \item Human detection: detect the faces/upper body/whole body in both left and right images.
+    \item Correspondence problem: figure out which points set of the left image correspond to which points set of the right image, here the image points sets are the pixel sets of faces/upperbody/whole body.
+    \item Stereo triangulation: range people based on stereo triangulation.
+    \end{enumerate}
+Figure~\ref{fig_position} shows the geometry model of a stereo camera with two
+ aligned lenses.
+Optical center is the center of the perspective projection.
+The line perpendicular to the image plane passing through the optical center
+ is the optical axis.
+The intersection point of the optical axis and the image plane is called the principal point.
+Without loss of generality, the world coordinate system is selected such that
+ its origin is located at the optical center of the left camera
+ and the Z-axis is collinear to the optical axis, as shown in Figure~\ref{fig_position}.
+$P$ is a 3D Euclidean point $(X,Y,Z)^T$ captured by two cameras
+ and the two corresponding projected pixels are $P_L$ and $P_R$,
+ whose pixel positions are $(x_L,y_L)$ and $(x_R,y_R)$ respectively.
+Let the principal point of left camera be $(o_x,o_y)^T$.
+Then the projection of $P$ onto the image plane of the left camera is
+\begin{equation}
+x_L = \frac{Xf}{Z}+o_x, y_L = \frac{Yf}{Z}+o_y.
+\end{equation}
+Expressed in matrix:
+\begin{equation}
+\lambda_L \begin{pmatrix}x_L \\ y_L \\ 1 \end{pmatrix} = \begin{pmatrix}f & 0 & o_x\\0 & f & o_y\\ 0 & 0 & 1 \end{pmatrix} \begin{pmatrix}X \\ Y \\ Z\end{pmatrix}.
+\end{equation}
+$\lambda_L$ is a scaling factor.
+Let $K=\begin{pmatrix}f & 0 & o_x\\0 & f & o_y\\ 0 & 0 & 1\end{pmatrix}$,
+when the origin of the pixel coordinate system corresponds to the principal point,
+ $(o_x,o_y)^T=(0,0)^T$.
+The right camera is located on the $X$ axis
+ and its optical center is $(d_a,0,0)$.
+Because both cameras are identical,
+ so we have:
+\begin{equation}
+\lambda_R \begin{pmatrix}x_R \\ y_R \\ 1 \end{pmatrix} = K \begin{pmatrix}X \\ Y \\ Z\end{pmatrix} - K  \begin{pmatrix}d_a \\ 0 \\ 0\end{pmatrix}.
+\end{equation}
+Then the relationship between two corresponding pixels $P_L$, $P_R$ and the depth Z of $P$ is
+\begin{equation}
+\begin{pmatrix}x_R \\ y_R \end{pmatrix} = \begin{pmatrix} {x_L-\frac{f \cdot d_a}{Z}} \\ y_L \end{pmatrix}.
+\end{equation}
+So the depth of point $P$ is
+\begin{equation}
+  Z=\frac{f \cdot d_a}{Disparity}.
+\end{equation}
+
+
+
+\paragraph{Multiple cues synthesizing:}
+SocialLesn synthesizes all the cues from the monocular and binocular visions
+ to generate a location graph of all the people in the scene,
+ which is a partial order graph with some of them labeled absolute distance.
+
+%视野的大小取决于镜头的焦距和底片大小的比例
+
+%标准镜头的视角约50度左右，这是人单眼在头和眼不转动的情况下所能看到的视角，从标准镜头中观察的感觉与我们平时所见的景物基本相同。
+
+
+
+
+\subsubsection{Pattern}
+By detecting the human and color/texture in a scene, SocialLens tracks these features continuously
+ and acquires the relative motion patterns of other persons except the observer.
+The motion pattern of the observer is acquired through his/herself's smart phone.
+Taking the observer's motion patter as reference, the absolute motion pattern of others
+ can be obtained.
+%The static status parameters include the orientation of the camera and illumination.
+
+The motion patterns include:
+\begin{itemize}
+\item Walking: the direction and speed.
+\item Running: the direction,speed and interval between two steps.
+\item Jumping: the jump height.
+\item Spinning:speed.
+\end{itemize}
+
+\subsubsection{Environment}
+Not only makes use of the features of people,
+ SocialLens also utilizes the environment to help connecting the observer's vision to the sense of the observed peoples,
+for example, the illumination of the environment.
+
+
+\subsection{Direct Features}
+The direct features are obtained from input data by the user or sensed data by the smart phone.
+
+\subsubsection{People Profile}
+Like all the other social networks,
+ the user using SocialLens has his/her own profile,
+ including his/her head portrait, gender, height, social group, interest, profession
+  or other information which characterizes the user.
+For better localization, the eye distance and shoulder width are also preferred.
+These profile can be input by the user.
+ or obtained from other application, \eg accessing to the API of Facebook and other social networks.
+Each user broadcasts his/her profile according to the application scene and his/her privacy setting.
+For example, in a research conference, a user broadcasts his/her head portrait,
+ name, affiliation and interest. But in the membership authentication application,
+  only head portrait and member id is broadcasted.
+
+
+\subsubsection{Location}
+GPS is a broad adopted technology for outdoor localization,
+ but its meter-level accuracy cannot afford to distinguish nearby user in most social scenes,
+ and it doesn't work indoor.
+There are a lot research to localize the mobile phone indoor using RSSI, acoustic signal, CSI, etc.
+They provide higher accuracy than GPS, but most of them are fingerprint based which requires complicated pre-work.
+There are some range based indoor localization methods, but they need at least three anchor nodes.
+The work BeepBeep \cite{peng2007beepbeep} proposed a high accuracy acoustic ranging approach for mobile phones.
+[the principle of ETOA]
+Based on the ETOA technique in BeepBeep,
+ we designed an efficient high accuracy real time acoustic localization scheme for
+ a crowd of people without any anchor node.
+
+
+\paragraph{Acoustic signal generation:}
+In BeepBeep, they chose a 6kHz-8kHz linear chirp acoustic signal for ranging.
+But using the voice can be heard by people for continuous localization for a crowd of people will be quite annoying.
+In SocialLens, we generate the voice which cannot be heard by most people using the mobile phone.
+The frequency of the voice should be higher than 20kHz.
+Because, the vast majority of people cannot hear anything above 20kHz.
+Besides, there are much less high-frequency acoustic noise than the low-frequency stage in the normal situation in life
+ ,as shown in Figure~\ref{fig_audio}.
+So the high frequent sound wave has a advantage that it is more resistant to noise.
+Limited by the 44.1KHz sample rate of the phone DAC,
+ currently the highest frequency acoustic signal in SocialLens is 22KHz.
+In SocialLens, the signal is not a complex frequency sound,
+ but a sound with one or several discrete high frequency sound wave.
+
+\begin{figure}[t!]
+\centering
+\includegraphics[width=\linewidth]{audio.eps}
+\caption{The spectrum energy graph. The second one is captured on a train. the third one is captured in a noisy KTV room.}\label{fig_audio}
+\end{figure}
+%[Analysis the background noise]
+
+%In the monochromatic case x(t) = a cos 2\pif0t, no ambiguity exists in the decomposition
+%and in the physical interpretation of f0 as frequency.
+
+%(But, it is a statistical cutoff, not a brick wall. Some people clearly hear to higher frequencies, many as high as 22KHz.)
+%That said, there is also growing evidence that many people “perceive” frequencies above 20KHz. There are many theories that support the idea that this is an %alternative hearing mechanism, and it is yet to be proven. But, some scientific evidence has shown perception of content around 26KHz by people with apparently %much lower cutoffs.
+
+%Two condition:
+%1.learn the background sound // in case there are some high frequent background nosisy
+%2.learn other frequency range //in case there are a ouran noise
+%[1] Energy detection
+%[2] Peak detection
+
+\paragraph{The arrival time analysis:}
+To achieve high ranging precision, it is critical to precisely
+locate the first signal sample in recorded sound samples.
+This is particular challenging for COTS mobile devices,
+since in general, the speakers and microphones in such
+devices have only limited capability, e.g. narrow spectrum
+support. The existing work produce sound in 2-8kHz, which has a good frequency response, while
+ this range has a lot of noise and will be annoying.
+ This multipath effect
+may cause ambiguous ETOA detection and therefore significantly
+reduce the detection accuracy if not handled well.
+
+In SocialLens each device $P_i$ records the sound continuously,
+ the recorded sound wave $W_i$ contains the high-frequency acoustic signals
+ generated by itself and other devices.
+Each device divides the sound wave into subsections by time slot according to the sound generation schedule.
+Say the sound wave in time slot $T_j$ is $W_i(T_j)$.
+Basically, $P_i$ applies FFT to each $W_i(T_j)$ to
+ detect the existence of the high-frequency acoustic signal in that time slot.
+If there is a signal in the time slot, $P_i$ divides $W_i(T_j)$ into halves
+ and applies FFT to each half to detect the signal.
+Applying FFT to the half containing the signal iteratively in a dichotomy way,
+ $P_i$ narrows down the range of the arrival time.
+
+However, $P_i$ cannot get the accurate arrival time
+ by dividing the sound wave into very small time spans,
+ because the frequency resolution of FFT decreases as the increase of the time resolution.
+In most smart phones, the supported sample rate of sound is 44100Hz and the time interval between two samples is $22.68\mu$s.
+The propagation distance of sound during the interval is 7.7mm.
+The frequency range of the sound is 0Hz to 22050Hz.
+Let the acceptable lowest frequency resolution be $f_r$ for high-frequency signal detection.
+There must be at least $n=\lceil\frac{22050}{f_r}\rceil$ samples in the smallest time span.
+So the accompanying time resolution is $22.68 \times n$ $\mu s$, which makes the distance resolution to be at least $7.7 \times n$ mm.
+For example, even when $f_r=100$Hz, the distance resolution will be at least 169cm, which doesn't meet the requirement of SocialLens.
+
+To get the accurate arrival time, given the frequency resolution,
+ we first locate the sample set, whose size is $n=\lceil\frac{22050}{f_r}\rceil$, containing the signal in the above dichotomy way.
+And then we use a window of size $n$ sliding from the last sample of the located sample set in the reverse-time direction to detect the signal.
+The window stops as soon as the signal cannot be detected, then the end time of the window is the arrival time of the signal.
+Note that, this method requires that there must be a $n$ samples distance between two adjacent time slots.
+
+
+
+
+%In beepbeep. The signal is detected by correlation with the reference
+%chirp signal in the time domain.
+%the same chirp signal is used by all ranging parties, it is required
+%to associate each signal to an individual device in order
+%to calculate ETOAs. To differentiate these signals, we
+%employ a schedule-based protocol that allocates a specific
+%time window for each party in a ranging process to emit the
+%sound signal.
+
+%In an indoor environment, reflection from a secondary
+%path may overlap with the signal from the line-of-sight
+%(LOS) path. Such signal combination may cause the maximum
+%peak to appear at the secondary path, which is slightly
+%lagged regarding to the signal that travels in the primary path.
+
+%%beepbeep监测corralation最大的peak，但是容易受到多径效应的干扰
+
+
+\paragraph{Localization protocol:}
+\begin{enumerate}[Step 1]
+\item Neighbor discovery.
+The naive version is the initiator broadcast a request, and all the users received will reply an ack message.
+The initiator collects the id of all involved users and maintains a neighbor list.
+In an ad hoc network, the broadcasting will be limited by TTL.
+\item Schedule broadcasting.
+An accurate time synchronization is not necessary.
+The initiator broadcasts a schedule consisting of a delay for each user.
+As soon as a user receives a schedule, he/she starts recording voice and starts up a timer to count down his/her waiting time to play the acoustic signal.
+\item Acoustic signals playing and recording.
+When a user's waiting time is up, he/she plays the high frequent acoustic signal at maximum volume.
+\item Distance calculation.
+As soon as the schedule time is up, each user calculate the timer intervals of his own signal and other's signals and broadcast the result.
+\item Triangulation based localization.
+\end{enumerate}
+
+%%实时进行傅里叶变换可能导致丢帧？
+
+
+%[add] different tones for distinguish user
+%[add] use recorder to wake wifi up
+
+% schedule like neighbor discovering(centralized vs decentralized).
+% future work: decentralized.
+% leverage wifi schedule.(zigbee)
+
+
+\subsubsection{Pattern}
+
+\paragraph{Self pattern collection}
+Each user carrying a smart phone need to collet his/her own current status from all the sensors of the phone,
+ including the light sensor, accelerometer, digital compass, gyroscope, image sensors.
+With the values from all these sensors, the orientation of the phone, the illumination, and the following motion pattern can be recognized:
+\begin{itemize}
+\item Walking: the direction and speed.
+\item Running: the direction,speed and interval between two steps.
+\item Jumping: the jump height.
+\item Spinning:speed.
+\end{itemize}
+
+\begin{figure}[t!]
+\centering
+\includegraphics[width=0.95\linewidth,clip]{acc.eps}
+\includegraphics[width=0.95\linewidth, clip]{orientation.eps}
+\caption{The motion pattern detected by sensor data. The upper figure is the walk/jump pattern detected with accelerometer.
+The lower figure is the spin pattern detected by orientation sensor.}\label{fig_acc}
+\end{figure}
+
+
+\paragraph{Neighbors' pattern collection}
+Each device broadcasts its current motion pattern periodically.
+Multi-hop communication can be used to obtain the personal profile and motion pattern of users who is more than one-hop away.
+In common cases, people who are in the observer's visual field and can be recognized by the image sensor won't be very far away from the observer,
+ especially in the indoor environment.
+So only a very limited TTL is enough for the multi-hop communication.
+
+\subsubsection{Environment}
+Some environment parameters are collected by the sensors also, for example, the illumination of the environment.
+
+%\subsection{Feature Caching and SEXIF Storage}
+%For the real time application, the visual features and sensing features
+% are cached for real time mapping.
+%For some applications, the sensing features are stored along with the photo and video.
+%In this section, we design the caching of visual and sensing features and the storage of social EXIF.
+%
+%The sensing features are updated continuously and frequently,
+% it is not efficient to cache, store all the collected features.
+%
+
+% storage&feature analysis cloud and mobile phone tradeoff
+
+\subsection{Neighbor Discovery and Feature Exchange}
+In a naive version, all uses keep their Wi-Fi on and communicates with each other through AP
+ or Wi-Fi direct.
+Each user broadcasts his/her current feature within the reachable range limited by the TTL,
+ and store the received features of other users.
+
+
+%One-to-Many
+
+
+First we give a general case of SocialLens.
+Except the observer, there are $k$ people $P=\{P_1, \dots, P_k\}$ with smart phones using SocialLens based application.
+One observer $P_o$ uses the camera of his/her phone to capture the image of people around.
+$p$ people $P'=\{P_1', \dots, P_p'\}$ are captured in the image.
+
+Let the mapping result is a bipartite graph $G$ with two node sets $P$, $P'$ and the edge set $E=\{(P_i,P_j',w)\}$,
+ here $P_i$ is from $P$, $P_j'$ is from $P'$, $w$ is the weight of the edge, which is the confidence/similarity of its two endpoints.
+Then the feature mapping is constructing the bipartite graph which maximize the overall edge weight
+ when the maximum degree of nodes is 1.
+
+In this model, we need to deal with the following problems:
+\begin{itemize}
+\item Direct feature incompetency, \ie $k<p$.
+\item Visual feature incompetency, \ie $k>p$.
+\item Feature inaccuracy.
+\end{itemize}
+\subsection{People Profile Mapping}
+The observer recognizes the faces, height and color histogram of the $p$ people in $P'$,
+ and collects the profile information of the $k$ people in $P$.
+Let the profile matching result is the bipartite graph $G_p$ with node sets $P$, $P'$ and the edge set $E_p$
+
+\subsection{Location Mapping}
+Map the location from image and location by the localization result of mobile phones.(Map the nodes of two partial order graph).
+Let the location matching result is the bipartite graph $G_l$ with node sets $P$, $P'$ and the edge set $E_l$
+%The structure of a subnet, neighborhood relationship.
+
+\subsection{Motion Pattern Mapping}
+%Similar to Tagsense, but we need more refined pattern.
+Map the motion patterns from the image and motion patterns from the mobile phone sensors.
+
+The motion patterns of the $k$ people in $P$ are presented by $k$ curves $C=\{c_1,\dots,c_k\}$.
+Here $c_i$ is a curve consist of a sequence of $(x_i,t)$, $x_i$ is the coordinate in the earth-coordinate system and $t$ is the time.
+The motion patterns of the $p$ people in $P'$ are presented by $p$ curves $C'=\{c_1',\dots,c_k'\}$.
+Similarly, $c_i'={(x_i',t)}$, and $x_i'$ is the coordinate in the visual-coordinate system.
+So the motion pattern mapping is to match the curves in $C$ with curves in $C'$ by performing space rotation
+ and time shifting.
+Space shifting operation:
+ $c_i(x_i)$ is the space shifting ($x_i$) for each user $P_i$, $c_j'(y)$ is the space shifting $y$ for all the users in $P'$.
+Time shifting operation:
+ $c_i(x_i,t_i)$ is the time shifting $t_i$ for each user $P_i$, $c_j'(y,t)$ is the time shifting $t$ for all the users in $P'$.
+
+So the matching problem is to decide $x_i$, $t_i$, $y$ and $t$ to
+ maximize the overall correlation between the two curve sets ${c_1(x_1,t_1),\dots,c_k(x_k,t_k)}$ and ${c_1'(y,t),\dots,c_p'(y,t)}$.
+
+There are three types of correlation functions:(1) the sum distance between all points on the two curves;(2) the average distance between all points on the twe curves;(3) take the two curves as two vectors and calculate the cosine value of them.
+
+Note that when the sample rates of image sensor and other sensors are different,
+ we need to reduce the curve with higher sample rate to fit the lower sample rate.
+
+Let the motion pattern matching result is the bipartite graph $G_m$ with node sets $P$, $P'$ and the edge set $E_m$
+
+\subsection{Environment Mapping}
+Mapping the environment by illumination, objective and text around.
+Let the environment mapping result is the bipartite graph $G_e$ with node sets $P$, $P'$ and the edge set $E_e$
+
+\subsection{Synthesis Mapping}
+The synthesis mapping put different features' mapping results together to decide
+ the mapping result dynamically.
+Formally, given four bipartite graphs $G_p$,$G_l$,$G_m$ and $G_e$,
+ the final mapping result is to pick edges from these graphs to
+ produce a bipartite graph $G$ to maximize the overall edge weight of $G$.
+However, when there are inconsistent edges in the four graphs, we should not treat
+ the four graphs equally.
+The matching results of the four types of features have different accuracy,
+ which should be taken into consideration when produce the final graph.
+
+
+
+\subsection{Human-aided Mapping}
+In some case, it's quite difficult to mapping all the people automatically,
+ human may help to map some person cannot be recognized by the phone.
+
+Machine learning mechanism. 

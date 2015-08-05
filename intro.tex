@@ -1,0 +1,42 @@
+Worldwide user base of smartphone hit 1 billion in 2012 and the current number of apps available in Apple's AppStore exceeds 700,000,
+ meanwhile there is about the same number of live Android apps in the market.
+Accurate localization service is a fundamental service for a significant portion of these applications. While the outdoor localization has been solved by GPS, localization in indoor environment remains an open question, leading to largely restricted adoption of many apps for indoor scenarios.
+Although numerous research studies as well as industrial efforts have been devoted to this problem, heretofore there still lacks a feasible and widely applied approach for indoor localization.
+%Nowadays, research on indoor localization service attracts more and more attention.
+Existing work can be generally classified into two categories. One category includes many dedicated systems that require deploying infrastructure \cite{borriello2005walrus}\cite{hazas2005relative} in priori or leveraging specialized hardware \cite{prorok2011accommodation}\cite{priyantha2000cricket}.
+These methods have achieved high accuracy but can hardly be applied on smartphones whose demands are stringent. Besides, they suffer from expensive infrastructure resulting in the difficulty of scaling to pervasive usage. The other category of solutions is infrastructure-free. Most of extant infrastructure-free approaches use fingerprints to index locations, where they are collected, and build fingerprint databases. On the localization stage, user's smartphone senses fingerprints which are then compared with ones stored in database. Then the location label of the best matched fingerprint is returned to the user. The most commonly applied fingerprints are WiFi signals from prevalent wireless access points.
+These methods, however, still have some limitations for practical applications. First, they need exhausted survey of wireless fingerprints on all locations, which is very costly. To fulfill this task, crowdsourcing methods \cite{yang2012locating} are considered in recent works. Second, these schemes suffer a lot from the dynamics of signal distribution. For example, the displacement of an access point can significantly degrade their performance. Finally, although reasonable accuracy can be achieved, fingerprint-based approaches can have significant errors due to one of their fundamental limits, distinct locations with similar signatures. Some researchers propose to use image matching which determines the user's location by searching the most similar images in database and then returns the location where the matched image is surveyed. These methods incur large amounts of storage cost to maintain image database with very high delay for image searching. Furthermore, they can only provide room-level accuracy due to the sparse sampling.
+
+To address these issues, we present \oursystem, a novel type of infrastructure-free indoor localization system, which explores the rich and stable vision features of the indoor environment and makes use of the geographical information of these vision features to inversely calculate user's location.
+Site-survey of \oursystem is conducted only at a few locations by taking photos of indoor environment with two cameras and then we extract vision features from photos. We leverage the binocular ranging technique to calculate the depths of vision features, which are used to figure out vision features' geographical coordinates. We propose a two-stage, cluster-based search scheme to fast find the nearest neighbors of user's query feature points. On the localization stage, according to perspective projection model we avail of query features' nearest neighbors to inversely calculate user's geographical location in realtime and with high accuracy.
+As an infrastructure-free indoor localization system, \oursystem avoids the limitations of existing fingerprinting schemes and exhibits the following advantages:
+1) Lightweight and easy to operate site-survey. Different from fingerprinting, our method does not require an exhaustive site-survey, with only a few locations surveyed for generating reference points.
+2) Robust. The vision features leveraged in this work are highly distinctive, invariant to scale, rotation, distortion, addition of noise, change in viewpoint, and change in illumination and thus avoid the impact of dynamic signal distribution.
+3) Highly accurate and realtime. \oursystem achieves $1.76m$ of average error in office environment, and $2.2m$ of average error in shopping mall. In office environment \oursystem only takes no more than $1.5s$ for 90\% queries, $1s$ for 90\% in shopping mall and the average time is no more than $1.5s$ for both.
+
+The major contributions of this work are summarized as follows:
+\begin{itemize}
+\item We present a new framework leveraging vision features to achieve highly efficient indoor localization. Based on the perspective projection model, we inversely calculate the geographical location of a user in realtime.
+\item We enhance the performance of inverse localization by the optimization of the error estimate function, which appends a vote procedure to select the final result.
+\item We propose an integrated system design including novel approach for vision based site-survey, fast search scheme for the query feature's nearest neighbor and inversely calculation of user's location.
+\item We implement the proposed scheme on both smartphone and PC, and also conduct extensive experiments to verify the effectiveness of our approach.
+
+
+\end{itemize}
+The rest of the paper is organized as follows. Section 2 introduces the system architecture. Section 3 presents the consideration and design of site-survey approach. Section 4 describes the two-stage search scheme. Section 5 elaborates the algorithm of inverse localization and optimization about it. The performance is evaluated in Section 6 and related work is summarized in Section 7. Finally we concludes this paper in Section 8.
+
+%
+%
+%\mynote{challenges of our approach}
+%\mynote{the FM paper}
+%
+%Advantages:
+%\begin{itemize}
+%\item Vision features are highly distinctive£¬ invariant to scale, rotation, distortion, addition of noise, change in viewpoint, and change in illumination.
+%\item Angle of view is consistency for same devices.
+%\item Rich vision features provide high robustness and uniqueness.
+%\item Infrastructure-free and good devices compatibility.
+%\item Easy construction and deployment for any environment.
+%\item High accuracy of both location and orientation.
+%\item Low computation, communication and storage cost.
+%\end{itemize}
