@@ -1,59 +1,26 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=latex 2014.2.20)  11 APR 2015 11:21
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=latex 2015.8.3)  6 AUG 2015 11:18
 entering extended mode
 **related.tex
-("D:\papers\PerLoc\mass 15\related.tex"
+("C:\Users\IBM_ADMIN\zip\mass 15\mass15\related.tex"
 LaTeX2e <2011/06/27>
 Babel <v3.8m> and hyphenation patterns for loaded.
-)
-*
-(Please type a command or say `\end')
-*
-(Please type a command or say `\end')
-*\end
 
-*
-Runaway argument?
-! Paragraph ended before \end was complete.
-<to be read again> 
-                   \par 
-<*> 
-    
-? 
-(Please type a command or say `\end')
-*
-(Please type a command or say `\end')
-*
-(Please type a command or say `\end')
-*
-(Please type a command or say `\end')
-*
-(Please type a command or say `\end')
-*
-(Please type a command or say `\end')
-*\end
+! LaTeX Error: Missing \begin{document}.
 
-*
-Runaway argument?
-! Paragraph ended before \end was complete.
-<to be read again> 
-                   \par 
-<*> 
-    
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.2 T
+     here are many dedicated indoor localization systems with specialized ha...
+
 ? 
 ! Emergency stop.
-<to be read again> 
-                   \par 
-<*> 
-    
-End of file on the terminal!
+ ...                                              
+                                                  
+l.2 T
+     here are many dedicated indoor localization systems with specialized ha...
 
- 
-Here is how much of TeX's memory you used:
- 7 strings out of 495355
- 162 string characters out of 3183882
- 44842 words of memory out of 3000000
- 3276 multiletter control sequences out of 15000+200000
- 3640 words of font info for 14 fonts, out of 3000000 for 9000
- 14 hyphenation exceptions out of 8191
- 5i,0n,1p,521b,8s stack positions out of 5000i,500n,10000p,200000b,50000s
-No pages of output.
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+

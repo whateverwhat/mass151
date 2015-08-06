@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=latex 2015.8.3)  5 AUG 2015 15:22
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=latex 2015.8.3)  6 AUG 2015 15:20
 entering extended mode
 **PerLoc.tex
 ("C:\Users\IBM_ADMIN\zip\mass 15\mass15\PerLoc.tex"
@@ -357,20 +357,18 @@ File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
 
 
 ])
-("C:\Users\IBM_ADMIN\zip\mass 15\mass15\system_overview.tex"
 File: overview2.eps Graphic file (type eps)
  <overview2.eps>
 File: pair_photo.eps Graphic file (type eps)
 
-<pair_photo.eps>) [2] ("C:\Users\IBM_ADMIN\zip\mass 15\mass15\site.tex"
+<pair_photo.eps>
 File: site-survey2.eps Graphic file (type eps)
-
-<site-survey2.eps>
+ <site-survey2.eps> [2]
 File: twoview2.eps Graphic file (type eps)
  <twoview2.eps> [3]
 File: refgeo.eps Graphic file (type eps)
- <refgeo.eps> [4])
-("C:\Users\IBM_ADMIN\zip\mass 15\mass15\search.tex"
+ <refgeo.eps>
+[4] ("C:\Users\IBM_ADMIN\zip\mass 15\mass15\search.tex"
 Underfull \hbox (badness 10000) in paragraph at lines 15--17
 [][]\OT1/ptm/m/n/10 representative set $\OML/cmm/m/it/10 R$\OT1/ptm/m/n/10 , cl
 us-ter hash map
@@ -409,9 +407,9 @@ File: mall_func12.eps Graphic file (type eps)
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [8])
-("C:\Users\IBM_ADMIN\zip\mass 15\mass15\ack.tex")
 ("C:\Users\IBM_ADMIN\zip\mass 15\mass15\conclusion.tex")
-("C:\Users\IBM_ADMIN\zip\mass 15\mass15\PerLoc.bbl" [9])
+("C:\Users\IBM_ADMIN\zip\mass 15\mass15\ack.tex")
+("C:\Users\IBM_ADMIN\zip\mass 15\mass15\PerLoc.bbl")
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -423,16 +421,14 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[10
-
-] ("C:\Users\IBM_ADMIN\zip\mass 15\mass15\PerLoc.aux") ) 
+[9] ("C:\Users\IBM_ADMIN\zip\mass 15\mass15\PerLoc.aux") ) 
 Here is how much of TeX's memory you used:
- 3802 strings out of 495355
- 54095 string characters out of 3183883
+ 3796 strings out of 495355
+ 53870 string characters out of 3183883
  110430 words of memory out of 3000000
  6846 multiletter control sequences out of 15000+200000
  33971 words of font info for 94 fonts, out of 3000000 for 9000
  17 hyphenation exceptions out of 8191
- 27i,11n,24p,1340b,302s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 27i,11n,24p,1323b,302s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on PerLoc.dvi (10 pages, 78788 bytes).
+Output written on PerLoc.dvi (9 pages, 77792 bytes).
