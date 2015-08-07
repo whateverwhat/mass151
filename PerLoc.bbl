@@ -75,6 +75,13 @@ M.~A. Fischler and R.~C. Bolles, ``Random sample consensus: a paradigm for
   cartography,'' \emph{Communications of the ACM}, vol.~24, no.~6, pp.
   381--395, 1981.
 
+\bibitem{yang2014tagoram}
+L.~Yang, Y.~Chen, X.-Y. Li, C.~Xiao, M.~Li, and Y.~Liu, ``Tagoram: Real-time
+  tracking of mobile rfid tags to high precision using cots devices,'' in
+  \emph{Proceedings of the 20th annual international conference on Mobile
+  computing and networking}.\hskip 1em plus 0.5em minus 0.4em\relax ACM, 2014,
+  pp. 237--248.
+
 \bibitem{bahl2000radar}
 P.~Bahl and V.~Padmanabhan, ``Radar: An in-building rf-based user location and
   tracking system,'' in \emph{IEEE INFOCOM}, 2000.
@@ -82,11 +89,6 @@ P.~Bahl and V.~Padmanabhan, ``Radar: An in-building rf-based user location and
 \bibitem{youssef2008horus}
 M.~Youssef and A.~Agrawala, ``The horus location determination system,''
   \emph{Wireless Networks}, vol.~14, no.~3, pp. 357--374, 2008.
-
-\bibitem{varshavsky2007gsm}
-A.~Varshavsky, E.~de~Lara, J.~Hightower, A.~LaMarca, and V.~Otsason, ``Gsm
-  indoor localization,'' \emph{Pervasive and Mobile Computing}, vol.~3, no.~6,
-  pp. 698--720, 2007.
 
 \bibitem{park2010growing}
 J.~Park, B.~Charrow, D.~Curtis, J.~Battat, E.~Minkov, J.~Hicks, S.~Teller, and
@@ -100,11 +102,6 @@ K.~Chintalapudi, A.~Padmanabha~Iyer, and V.~Padmanabhan, ``Indoor localization
   without the pain,'' in \emph{Proceedings of the sixteenth annual
   international conference on Mobile computing and networking}.\hskip 1em plus
   0.5em minus 0.4em\relax ACM, 2010, pp. 173--184.
-
-\bibitem{peng2007beepbeep}
-C.~Peng, G.~Shen, Y.~Zhang, Y.~Li, and K.~Tan, ``Beepbeep: a high accuracy
-  acoustic ranging system using cots mobile devices,'' in \emph{Sensys 2007},
-  2007.
 
 \bibitem{qiu2011feasibility}
 J.~Qiu, D.~Chu, X.~Meng, and T.~Moscibroda, ``On the feasibility of real-time

@@ -346,15 +346,7 @@ year={1988},
   year={2003},
   organization={IEEE}
 }
-@inproceedings{kosecka2003qualitative,
-  title={Qualitative image based localization in indoors environments},
-  author={Kosecka, Jana and Zhou, Liang and Barber, Philip and Duric, Zoran},
-  booktitle={Computer Vision and Pattern Recognition, 2003. Proceedings. 2003 IEEE Computer Society Conference on},
-  volume={2},
-  pages={II--3},
-  year={2003},
-  organization={IEEE}
-}
+
 @inproceedings{ulrich2000appearance,
   title={Appearance-based place recognition for topological localization},
   author={Ulrich, Iwan and Nourbakhsh, Illah},
